@@ -20,9 +20,12 @@
 #include <iostream>
 
 #include "MultiSelectionWidget.h"
+//Project Includes
+#include "TimelineWidget.h"
 //External Includes
 #include <QtAlgorithms>
 #include <QtWidgets>
+
 
 namespace biogears_ui {
 
@@ -37,6 +40,7 @@ public:
 
   QListWidget* choices = nullptr;
   QListWidget* selected = nullptr;
+
 public slots: //QT5 Slots >(
   void clearAllPreferences();
   void moveSelectedLeft();
@@ -120,6 +124,8 @@ MultiSelectionWidget::MultiSelectionWidget()
 {
   QHBoxLayout* hLayout = new QHBoxLayout;
   QVBoxLayout* vLayout = new QVBoxLayout;
+  
+  QVBoxLayout* combinedLayout = new QVBoxLayout;
 
   auto& choices = _impl->choices;
   choices->addItem("HeartRate");
@@ -130,6 +136,7 @@ MultiSelectionWidget::MultiSelectionWidget()
   choices->sortItems();
 
   QWidget* buttonWidget = new QWidget;
+
 
   QPushButton* clearAllButton = new QPushButton("ClearAll");
   QPushButton* moveLeftButton = new QPushButton("<<");
@@ -144,6 +151,9 @@ MultiSelectionWidget::MultiSelectionWidget()
   choices->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
   _impl->selected->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
 
+  auto actionTimeline = TimelineWidget::create();
+ 
+
   hLayout->addWidget(choices);
   vLayout->addWidget(clearAllButton);
   vLayout->insertStretch(1);
@@ -154,8 +164,12 @@ MultiSelectionWidget::MultiSelectionWidget()
   hLayout->addWidget(buttonWidget);
   hLayout->addWidget(_impl->selected);
 
-  setLayout(hLayout);
+  combinedLayout->addLayout(hLayout);
+  combinedLayout->addWidget(actionTimeline);
+
+  setLayout(combinedLayout);
   buttonWidget->setLayout(vLayout);
+
 }
 //-------------------------------------------------------------------------------
 MultiSelectionWidget::~MultiSelectionWidget()
