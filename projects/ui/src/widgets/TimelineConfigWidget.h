@@ -38,6 +38,11 @@ public:
   int patientListSize();
   int envrionmentListSize();
   int timelineListSize();
+  void addAction(const std::string& name, double time);
+  bool removeAction(const std::string& name);
+  //Scenario time functions will probably not be separate entities in the future
+  void scenarioTime(double time);
+  double scenarioTime();
 
 signals:
   void patientChanged(int index);
@@ -45,6 +50,7 @@ signals:
   void timelineChanged(int index);
 
 private:
+  struct TimelineData;
   struct Implementation;
   biogears::unique_propagate_const<Implementation> _impl;
 };

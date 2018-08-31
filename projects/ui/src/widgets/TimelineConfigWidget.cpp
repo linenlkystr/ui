@@ -20,8 +20,19 @@
 #include "TimelineConfigWidget.h"
 //External Includes
 #include <QtWidgets>
+#include <biogears/string-exports.h>
+
 
 namespace biogears_ui {
+
+struct TimelineConfigWidget::TimelineData {
+public:
+  TimelineData(const std::string&, double);
+  std::string dataName;
+  double timelineLocation;
+
+  bool operator==(const std::string&);
+};
 
 struct TimelineConfigWidget::Implementation : QObject {
 
@@ -33,11 +44,33 @@ public:
   Implementation& operator=(const Implementation&);
   Implementation& operator=(Implementation&&);
 
+  std::vector<TimelineData> timelineSeries;
+  double scenarioTime;
+
 public:
 };
+//------------------------------------------------------------------------------
+TimelineConfigWidget::TimelineData::TimelineData(const std::string& name, double time)
+  : dataName(name)
+  , timelineLocation(time)
+{
+
+}
+//-------------------------------------------------------------------------------
+//This equality operator works for testing, but will need to get more specific since we can have multiple scenarios of the same
+//type in a single timeline (e.g. multiple substance boluses)
+bool TimelineConfigWidget::TimelineData::operator==(const std::string& rhs)
+{
+  if (this->dataName.compare(rhs) == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
 //-------------------------------------------------------------------------------
 TimelineConfigWidget::Implementation::Implementation()
-
+  : timelineSeries()
+  , scenarioTime(0)
 {
 }
 //-------------------------------------------------------------------------------
@@ -75,6 +108,31 @@ TimelineConfigWidget::TimelineConfigWidget()
 TimelineConfigWidget::~TimelineConfigWidget()
 {
   _impl = nullptr;
+}
+//-------------------------------------------------------------------------------
+void TimelineConfigWidget::addAction(const std::string& name, double time)
+{
+  _impl->timelineSeries.emplace_back(name, time);
+}
+
+bool TimelineConfigWidget::removeAction(const std::string& name)
+{
+  auto it = std::find(_impl->timelineSeries.begin(), _impl->timelineSeries.end(), name);
+  if (it != _impl->timelineSeries.end()) {
+    _impl->timelineSeries.erase(it);
+    return true;
+  } else {
+    return false;
+  }
+}
+//This is only to test functionality.  In practice, we should increment time as we add AdvanceTime actions to action struct
+void TimelineConfigWidget::scenarioTime(double time)
+{
+  _impl->scenarioTime = time;
+}
+double TimelineConfigWidget::scenarioTime()
+{
+  return _impl->scenarioTime;
 }
 ////-------------------------------------------------------------------------------
 //!
