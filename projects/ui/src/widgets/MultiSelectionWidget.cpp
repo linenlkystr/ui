@@ -22,6 +22,7 @@
 #include "MultiSelectionWidget.h"
 //Project Includes
 #include "TimelineWidget.h"
+#include "TimelineConfigWidget.h"
 //External Includes
 #include <QtAlgorithms>
 #include <QtWidgets>
@@ -151,8 +152,6 @@ MultiSelectionWidget::MultiSelectionWidget()
   choices->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
   _impl->selected->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
 
-  auto actionTimeline = TimelineWidget::create();
-
 
   hLayout->addWidget(choices);
   vLayout->addWidget(clearAllButton);
@@ -164,10 +163,7 @@ MultiSelectionWidget::MultiSelectionWidget()
   hLayout->addWidget(buttonWidget);
   hLayout->addWidget(_impl->selected);
 
-  combinedLayout->addLayout(hLayout);
-  combinedLayout->addWidget(actionTimeline);
-
-  setLayout(combinedLayout);
+  setLayout(hLayout);
   buttonWidget->setLayout(vLayout);
 
 }

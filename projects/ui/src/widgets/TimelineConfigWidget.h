@@ -21,38 +21,39 @@
 
 //External Includes
 #include <QToolBar>
+
 //Project Includes
+#include "TimelineWidget.h"
 #include <biogears/framework/unique_propagate_const.h>
 
 namespace biogears_ui {
 class TimelineConfigWidget : public QWidget {
   Q_OBJECT
 public:
-  TimelineConfigWidget();
+  TimelineConfigWidget(QWidget* parent = nullptr);
   ~TimelineConfigWidget();
 
   using TimelineConfigWidgetPtr = TimelineConfigWidget*;
 
-  static auto create() -> TimelineConfigWidgetPtr;
+  static auto create(QWidget* parent = nullptr) -> TimelineConfigWidgetPtr;
 
+private:
+  struct Implementation;
+  biogears::unique_propagate_const<Implementation> _impl;
+
+public:
   int patientListSize();
   int envrionmentListSize();
   int timelineListSize();
   void addAction(const std::string& name, double time);
   bool removeAction(const std::string& name);
-  //Scenario time functions will probably not be separate entities in the future
-  void scenarioTime(double time);
-  double scenarioTime();
+  const std::vector<ActionData> actionData();
 
+
+public:
 signals:
-  void patientChanged(int index);
-  void envonmentChanged(int index);
-  void timelineChanged(int index);
-
-private:
-  struct TimelineData;
-  struct Implementation;
-  biogears::unique_propagate_const<Implementation> _impl;
+  void actionAdded(const ActionData data);
+  void timeChanged(int time);
 };
 }
 
