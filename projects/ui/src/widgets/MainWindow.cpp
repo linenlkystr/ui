@@ -35,7 +35,7 @@ namespace biogears_ui {
 
 struct MainWindow::Implementation : public QObject {
 public: //Functions
-  Implementation();
+  Implementation(QWidget* parent = nullptr);
   Implementation(const Implementation&);
   Implementation(Implementation&&);
 
@@ -60,12 +60,12 @@ public: //Data
   TimelineConfigWidget* timeline_widget= nullptr;
 };
 //-------------------------------------------------------------------------------
-MainWindow::Implementation::Implementation()
+MainWindow::Implementation::Implementation(QWidget* parent)
   : physiologySelection(MultiSelectionWidget::create())
   , runToolbar(ScenarioToolbar::create())
   , patient_widget(PatientConfigWidget::create())
   , envrionment_widget(EnvironmentConfigWidget::create())
-  , timeline_widget(TimelineConfigWidget::create())
+  , timeline_widget(TimelineConfigWidget::create(parent))
 {
   PhysiologyDriver driver("BiogearsGUI");
   drivers.push_back(std::move(driver));
@@ -158,7 +158,9 @@ void MainWindow::Implementation::loadTimeline()
   drivers[0].timeline(fileName.toStdString());
 }
 //-------------------------------------------------------------------------------
-MainWindow::MainWindow()
+MainWindow::MainWindow(QWidget* parent)
+  : QMainWindow(parent)
+  , _impl(parent)
 {
   //setCentralWidget(textEdit);
   createActions();

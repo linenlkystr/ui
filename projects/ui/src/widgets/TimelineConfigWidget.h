@@ -45,8 +45,7 @@ public:
   int patientListSize();
   int envrionmentListSize();
   int timelineListSize();
-  void addAction(const std::string& name, double time);
-  bool removeAction(const std::string& name);
+  void addAction(std::string& name, double time);
   const std::vector<ActionData> actionData();
 
 

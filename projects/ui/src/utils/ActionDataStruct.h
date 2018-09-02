@@ -29,22 +29,25 @@ namespace biogears_ui {
 
 struct ActionData {
 public:
-  ActionData(const std::string& name, double time)
+  ActionData(std::string& name, double time)
     : dataName(name)
     , dataTime(time){};
 
   std::string dataName;
   double dataTime;
 
-  bool operator==(const std::string& rhs)
+  friend bool operator==(const ActionData& lhs, const ActionData& rhs)
   {
-    if (this->dataName.compare(rhs) == 0) {
+    if (lhs.dataName.compare(rhs.dataName) == 0) {
       return true;
     } else {
       return false;
     }
   };
-
+  friend bool operator<(const ActionData& lhs, const ActionData& rhs)
+  {
+    return lhs.dataName < rhs.dataName;
+  };
 };
 }
 #endif

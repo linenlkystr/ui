@@ -85,7 +85,7 @@ TimelineConfigWidget::TimelineConfigWidget(QWidget* parent)
   _impl->timeWidget->scenarioTime(30.0);
   connect(this, &TimelineConfigWidget::actionAdded, _impl->timeWidget, &TimelineWidget::addAction);
 
-    addAction("Sample", 5.0);
+    addAction(std::string("Sample"), 5.0);
 }
 //-------------------------------------------------------------------------------
 TimelineConfigWidget::~TimelineConfigWidget()
@@ -93,22 +93,12 @@ TimelineConfigWidget::~TimelineConfigWidget()
   _impl = nullptr;
 }
 //-------------------------------------------------------------------------------
-void TimelineConfigWidget::addAction(const std::string& name, double time)
+void TimelineConfigWidget::addAction(std::string& name, double time)
 {
   _impl->timelineSeries.emplace_back(name, time);
   emit actionAdded(_impl->timelineSeries.back());
 }
 
-bool TimelineConfigWidget::removeAction(const std::string& name)
-{
-  auto it = std::find(_impl->timelineSeries.begin(), _impl->timelineSeries.end(), name);
-  if (it != _impl->timelineSeries.end()) {
-    _impl->timelineSeries.erase(it);
-    return true;
-  } else {
-    return false;
-  }
-}
 const std::vector<ActionData> TimelineConfigWidget::actionData()
 {
   return _impl->timelineSeries;
